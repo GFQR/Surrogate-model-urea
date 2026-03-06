@@ -5,6 +5,7 @@ import db
 import rescale
 import regression
 import plot
+import utils
 
 cwd = pathlib.Path.cwd()
 rescale_bool = True
@@ -43,9 +44,6 @@ def main():
     X_col = np.column_stack((qresc, q2resc, cost, sint, cos2t, sin2t,
                              qresc_cost, qresc_sint, qresc_cos2t, qresc_sin2t))
     
-    # debug
-    #print (X_col)
-
     R2, coeff, intercept, mse, beta_pred, model = regression.harmt_polq(X_col, beta, alpha = 0)
 
     exp_data = np.column_stack((q, theta, beta)) # using un-scaled q
@@ -53,8 +51,11 @@ def main():
 
     print("R2:", R2)
     print("mse:", mse)
-    print("Coefficients:", coeff)
-    print("beta_pred", beta_pred)
+    # print("Coefficients:", coeff)
+    # print("beta_pred", beta_pred)
+
+    theta_max, beta_max = utils.max_find(utils.table_regression(model, q = 0.05))
+    print(f"maximum beta(theta = {theta_max:.3f}) = {beta_max:.3f}")
 
 
 if __name__ == "__main__":
