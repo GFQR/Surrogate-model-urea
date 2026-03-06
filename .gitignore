@@ -1,0 +1,25 @@
+ 
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# SQLite databases
+# *.db
+
+# Virtual environments
+venv/
+env/
+.env/
+
+# OS files
+.DS_Store
+
+# Test artifacts
+*.log
+
+# instructions
+requirements.txt
+
+# extras
+test/
