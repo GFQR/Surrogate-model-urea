@@ -5,19 +5,22 @@ import main
 import rescale
 
 # ---------------------------------------------------------------------
-def table_regression(model, q):
+def table_regression(model, qresc_scalar):
     '''
-    construct, from the model, the 2-column table beta|theta for a given q (un-rescaled)
+    construct, from the model, the 2-column table beta|theta for a given q (rescaled)
     '''
     theta_step = 0.01
     model_theta = 2*math.pi*np.arange(0, 1, theta_step)
-    model_q = q*np.ones(model_theta.shape)
+    model_q = qresc_scalar*np.ones(model_theta.shape)
 
+    '''
     if main.rescale_bool:
         qresc = rescale.std_scaling(model_q)
     else:
         qresc = model_q
-    
+    '''
+    qresc = model_q
+
     q2resc = np.square(qresc)
     cost = np.cos(model_theta)
     cos2t = np.cos(2*model_theta)

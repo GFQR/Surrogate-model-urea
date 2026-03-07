@@ -14,7 +14,7 @@ rescale_bool = True
 # ----------------------------------------------------------------------------
 def main():
     # Read the database
-    db_file = cwd / "../data/urea_test2_v03.db"
+    db_file = cwd / "../data/Dalton_dipole.db"
     Xbeta_set = db.read_db(db_file)
 
     # original data
@@ -28,6 +28,12 @@ def main():
         qresc = rescale.std_scaling(q)
     else:
         qresc = q
+
+    # user defines q_scalar and script find qresc_scalar to use in plot and utils
+    q_scalar = 0.1 # user defined: what q to plot?
+    q_index = np.argmax(q == q_scalar)
+    qresc_scalar = qresc[q_index]
+    print(f"scalars q {q_scalar} and qresc {round(qresc_scalar, 3)}")
 
     # derived expansion terms
     #const = np.ones(qresc.shape)
@@ -47,14 +53,14 @@ def main():
     R2, coeff, intercept, mse, beta_pred, model = regression.harmt_polq(X_col, beta, alpha = 0)
 
     exp_data = np.column_stack((q, theta, beta)) # using un-scaled q
-    plot.P_2D(exp_data, model, 0.05)
+    plot.P_2D(exp_data, model, q_scalar, qresc_scalar)
 
     print("R2:", R2)
     print("mse:", mse)
     # print("Coefficients:", coeff)
     # print("beta_pred", beta_pred)
 
-    theta_max, beta_max = utils.max_find(utils.table_regression(model, q = 0.05))
+    theta_max, beta_max = utils.max_find(utils.table_regression(model, qresc_scalar))
     print(f"maximum beta(theta = {theta_max:.3f}) = {beta_max:.3f}")
 
 
