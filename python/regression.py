@@ -6,7 +6,7 @@ from sklearn.preprocessing import PolynomialFeatures # type: ignore
 # ---------------------------------------------------------------------
 def harmt_polq(X, y, alpha):
     '''
-    implements the Ridge regression
+    implements the regression with Ridge regularization
     '''
     hp = Ridge(alpha, fit_intercept=True)
     hp.fit(X, y)
