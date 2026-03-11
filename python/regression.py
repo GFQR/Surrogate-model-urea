@@ -10,8 +10,8 @@ def harmt_polq(X, y, alpha):
     hp = Ridge(alpha, fit_intercept=True)
     hp.fit(X, y)
     y_pred = hp.predict(X)
-    mse = mean_squared_error(y, y_pred)
 
+    mse = mean_squared_error(y, y_pred)
     R2 = hp.score(X, y)
     coeff = hp.coef_
     intercept = hp.intercept_
