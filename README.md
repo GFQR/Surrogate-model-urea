@@ -105,22 +105,7 @@ which can produce unstable regression behavior.
 
 To address this, the final model uses a harmonic expansion of the angular variable:
 
-$$
-\beta(q,\theta)
-=
-a_0
-+
-a_1 q
-+
-a_2 q^2
-+
-\sum_{n=1}^{N}
-\left[
-(b_n + c_n q + d_n q^2)\cos(n\theta)
-+
-(e_n + f_n q + g_n q^2)\sin(n\theta)
-\right]
-$$
+![](./figures/equation.png)
 
 This Fourier-like representation:
 

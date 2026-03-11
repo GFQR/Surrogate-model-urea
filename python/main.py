@@ -15,6 +15,9 @@ rescale_bool = False
 
 # ----------------------------------------------------------------------------
 def main():
+    '''
+    Orchestration module
+    '''
     os.system('cls||clear')
 
     # cmd line arguments
@@ -105,7 +108,7 @@ def main():
     print("mse:", mse)
     if not rescale_bool:
         print("Coefficients:", coeff)
-        # print("beta_pred", beta_pred)BenRosen2014
+        # print("beta_pred", beta_pred)
         
     else:
         print("To see coefficients, turn rescale_bool=False")
