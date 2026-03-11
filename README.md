@@ -25,6 +25,8 @@ A surrogate machine learning model allows us to:
 
 This approach enables fast exploration of parameter spaces that would otherwise require many expensive simulations.
 
+In nonlinear optics, the molecular hyperpolarizability is directly related to second harmonic generation (SHG), a process in which incident light at frequency ω produces radiation at frequency 2$\omega$. SHG is widely used in photonics, optical signal processing, and laser technologies. Predicting and optimizing hyperpolarizability therefore provides a practical route to designing molecules with improved nonlinear optical response.
+
 ## Simulation Pipeline
 
 <p align="center">
