@@ -177,6 +177,7 @@ project/\
 │   └── sqlite database\
 │\
 └── figures/\
+└── bash/\
 └── results/
 
 ## Potential Extensions
