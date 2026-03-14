@@ -1,6 +1,7 @@
 import os
 import argparse
 import pathlib
+from xml.parsers.expat import model
 import numpy as np
 
 import db
@@ -27,12 +28,17 @@ def main():
     parser.add_argument(
         "--charge", "-q",
         type=float,
-        help="Choose charge (q)"
+        help="Choose charge (q) for the plot beta.vs.theta at fixed q"
     )
     parser.add_argument(
         "--input", "-i",
         type=str,
-        help="Choose input file (input.db)"
+        help="Choose input db file (input.db)"
+    )
+    parser.add_argument(
+        "--ridge", "-r",
+        type=str,
+        help="Choose on/off for regularization"
     )
     args = parser.parse_args()
 
@@ -57,22 +63,19 @@ def main():
     beta = Xbeta_np[:,2]
 
     # rescale q / no need to rescale trigonometric function
-    if rescale_bool:
-        qresc = rescale.std_scaling(q)
-    else:
-        qresc = q
-
-    # user defines q_scalar and script find qresc_scalar to use in plot and utils
-    q_scalar = args.charge # user defined: what q to plot?
-    q_index = np.argmax(q == q_scalar)
-    qresc_scalar = qresc[q_index]
-    if q_scalar != qresc_scalar:  
+    if args.ridge == "on":
+        qresc, qmean, qstd = rescale.std_scaling(q)
         print("rescale on")
         print()
     else:
+        qresc, qmean, qstd = q, 0, 1
         print("rescale off")
         print()
 
+    # user defines q_scalar and script find qresc_scalar to use in plot and utils
+    q_scalar = args.charge # user defined: what q to plot?
+    # q_index = np.argmax(q == q_scalar)
+    qresc_scalar = (q_scalar - qmean) / qstd # find the corresponding qresc_scalar to use in plot and utils
 
     # derived expansion terms
     #const = np.ones(qresc.shape)
@@ -101,21 +104,35 @@ def main():
     
     R2, coeff, intercept, mse, beta_pred, model = regression.harmt_polq(X_col, beta, alpha = 0)
 
-    exp_data = np.column_stack((q, theta, beta)) # using un-scaled q
-    plot.P_2D(exp_data, model, q_scalar, qresc_scalar)
+    # 1D and 2D tables with regression predictions
+    fixq_theta_1D = utils.table_regression_1D(model, qresc_scalar)
+    qresc_2D, theta_2D, beta_pred_2D = utils.table_regression_2D(model, qresc)
+    dalton_data = np.column_stack((qresc, theta, beta)) 
+    
+    # plots for fix q and for the whole 2D space
+    plot.P_2D(dalton_data, model, q_scalar, qresc_scalar)   
+    plot.P_3D(dalton_data, (qresc_2D, theta_2D, beta_pred_2D))
 
+    # predictions and metrics
     print("R2:", R2)
     print("mse:", mse)
+    print("intercept:", intercept)
     if not rescale_bool:
         print("Coefficients:", coeff)
-        # print("beta_pred", beta_pred)
         
     else:
         print("To see coefficients, turn rescale_bool=False")
 
-    theta_max, beta_max = utils.max_find(utils.table_regression(model, qresc_scalar))
-    print(f"maximum beta(theta = {theta_max:.3f}) = {beta_max:.3f}")
+    # find the maximum beta and corresponding theta for the fixed q_scalar
+    theta_max1D, beta_max1D = utils.find_max1D(fixq_theta_1D)
+    print(f"fixed q: {q_scalar:.3f}, maximum beta(theta = {theta_max1D*180/np.pi:.1f} deg) = {beta_max1D:.3f}")
 
+    # find the maximum beta and corresponding q and theta in the whole 2D space
+    q_max2D, theta_max2D, beta_max2D = utils.find_max2D(beta_pred_2D, qresc_2D, theta_2D)
+    q_max_2D_orig = q_max2D*qstd + qmean # find the corresponding q in original scale
+    print(f"maximum beta(charge = {q_max_2D_orig:.3f}, theta = {theta_max2D*180/np.pi:.1f} deg) = {beta_max2D:.3f}")
+
+    input("Press Enter to close plots...")
 
 if __name__ == "__main__":
     main()

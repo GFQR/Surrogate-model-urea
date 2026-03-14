@@ -10,7 +10,7 @@ def std_scaling(x):
 
     x_resc = (x - x_mean) / x_std
 
-    return x_resc
+    return x_resc, x_mean, x_std
 
 if __name__ == "__main__":
     None
