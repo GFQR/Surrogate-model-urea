@@ -135,6 +135,12 @@ Example regression results are shown in figure 2. More results in __results__ fo
   <em>Fig. 2: Hyperpolarizability from Dalton calculations  (red dots) and Python fit (blue) as a function of the angle that forms the charge distribution with the molecule. The figure corresponds to a dipole charge configuration and charge value $q=0.05$ [units of electron charge].</em>
 </p>
 
+<p align="center">
+  <img src="./results/2D_dipole.png" width="400">
+  <br>
+  <em>Fig. 2: Hyperpolarizability from Python surrogate model as a function of the charge and angle.</em>
+</p>
+
 
 In most cases the agreement is excellent.
 
@@ -190,3 +196,23 @@ Possible future improvements include:
 - neural network surrogate models
 - extension to other molecules and nonlinear optical properties
 - automated exploration of optimal charge configurations
+
+## How to run the python engine
+
+python main.py --help
+
+usage: main.py [-h] [--charge CHARGE] [--input INPUT] [--ridge RIDGE]
+
+Surrogate model for hyperpolarizability of urea
+
+options:
+  -h, --help            show this help message and exit\
+  --charge CHARGE, -q CHARGE\
+                        Choose charge (q) for the plot beta.vs.theta at fixed q\
+  --input INPUT, -i INPUT\
+                        Choose input db file (input.db)\
+  --ridge RIDGE, -r RIDGE\
+                        Choose on/off for regularization\
+
+Example: \
+python main.py --charge 0.5 --input Dalton_dipole.db --ridge on
